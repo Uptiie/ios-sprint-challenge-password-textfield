@@ -15,10 +15,10 @@ class PasswordField: UIControl {
     
     private let passwordContainerView: UIView = UIView()
     private let passwordTextField: UITextField = UITextField()
+    private let showPasswordButton: UIButton = UIButton()
+    private let hidePasswordButton: UIButton = UIButton()
     
     // Password Strength
-    
-    let weak = draw(CGRect(x: 0, y: 0, width: 20, height: 5))
     
     private let standardMargin: CGFloat = 8.0
     private let textFieldContainerHeight: CGFloat = 50.0
@@ -46,6 +46,7 @@ class PasswordField: UIControl {
     private var strengthDescriptionLabel: UILabel = UILabel()
     
     func setup() {
+        
         // Lay out your subviews here
         
         // Password Label
@@ -81,7 +82,12 @@ class PasswordField: UIControl {
         passwordTextField.bottomAnchor.constraint(equalTo: passwordContainerView.bottomAnchor, constant: -8).isActive = true
         passwordTextField.placeholder = "Enter Password"
         
-        //
+        // Show Password Button
+        
+        passwordTextField.addSubview(showPasswordButton)
+        showPasswordButton.translatesAutoresizingMaskIntoConstraints = false
+        showPasswordButton.leadingAnchor.constraint(equalTo: , multiplier: <#T##CGFloat#>)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -95,7 +101,29 @@ extension PasswordField: UITextFieldDelegate {
         let oldText = textField.text!
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
+        
         // TODO: send new text to the determine strength method
         return true
+    }
+    
+    class DrawingView: UIView {
+        
+        override func draw(_ rect: CGRect) {
+            if let context = UIGraphicsGetCurrentContext() {
+                
+                let topLeftWeak = CGPoint(x: 30, y: 380)
+                let topRightWeak = CGPoint(x: 60, y: 380)
+                let bottomLeftWeak = CGPoint(x: 30, y: 385)
+                let bottomRightWeak = CGPoint(x: 60, y: 385)
+                
+                context.addLine(to: topLeftWeak)
+                context.addLine(to: topRightWeak)
+                context.addLine(to: bottomLeftWeak)
+                context.addLine(to: bottomRightWeak)
+                
+                context.setFillColor(#colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1))
+                context.fillPath()
+            }
+        }
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 
 class PasswordField: UIControl {
     
-    // Public API - these properties are used to fetch the final password and strength values
+    // Public API - these properties are used to fetch the final password and strength value
     
     enum passwordStrength: String {
         case weakPasssword = "Password is weak"
@@ -77,6 +77,7 @@ class PasswordField: UIControl {
         textField.placeholder = "Enter Password"
         textField.font = UIFont.systemFont(ofSize: 10, weight: .light)
         textField.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
+        textField.isSecureTextEntry = true
         
         // Show/hode Password Button
        
@@ -86,6 +87,7 @@ class PasswordField: UIControl {
         showHideButton.topAnchor.constraint(equalTo: topAnchor, constant: 40.5).isActive = true
         showHideButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
         showHideButton.setImage(UIImage(named: "eyes-closed"), for: .normal)
+        showHideButton.addTarget(self, action: #selector(passwordShowHide(_:)), for: .touchUpInside)
         
         // Strength Labels
         
@@ -120,21 +122,49 @@ class PasswordField: UIControl {
         strengthDescriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30).isActive = true
         strengthDescriptionLabel.topAnchor.constraint(equalToSystemSpacingBelow: weakView.bottomAnchor, multiplier: 1.0).isActive = true
         strengthDescriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -380).isActive = true
-        
-        
 
         
+    }
+    
+    func strengthDescription(_ password: String) {
+        var passwordStrength: passwordStrength
+        switch password.count {
+        case 0...9:
+            passwordStrength = .weakPasssword
+        case 10...19:
+            passwordStrength = .mediumPassword
+        default:
+            passwordStrength = .strongPassword
+        }
+    }
+    
+    func strengthColor(_ passwordColor: passwordStrength) {
+        switch passwordColor {
+        case .weakPasssword:
+            weakView.backgroundColor = weakColor
+        case .mediumPassword:
+            mediumView.backgroundColor = mediumColor
+        case .strongPassword:
+           strongView.backgroundColor = strongColor
+        }
+    }
+    
+    @objc func passwordShowHide(_ sender: UIButton) {
+        textField.isSecureTextEntry.toggle()
+        if textField.isSecureTextEntry == false {
+            showHideButton.setImage(UIImage(named: "eyes-closed"), for: .normal)
+        } else {
+            showHideButton.setImage(UIImage(named: "eyes-open"), for: .normal)
+        }
         
+        let fullStrength = self.strengthDescription("\(strengthColor)")
+
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
-}
-
-switch {
-    if
 }
 
 
